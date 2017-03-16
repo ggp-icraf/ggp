@@ -1,0 +1,18 @@
+{% extends "help_base.html" %}
+{% load staticfiles%}
+
+{% block content-title %}
+{% if LANGUAGE_CODE == "en" %}
+    Help
+{% else %}
+    Bantuan
+{% endif %}
+{% endblock %}
+
+{% block content-body %}
+{% if LANGUAGE_CODE == "en" %}
+    For more detail help, please click <a href="{% static 'data/bantuan.pdf' %}">here</a>
+{% else %}
+	Untuk melihat bantuan silahkan buka <a href="{% static 'data/bantuan.pdf' %}">ini</a>
+{% endif %}
+{% endblock %}

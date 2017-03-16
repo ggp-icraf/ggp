@@ -1,0 +1,148 @@
+{% extends "ggp_base.html" %}
+{% load staticfiles%}
+
+{% block custom-head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-legend.css' %}" />
+    <style type="text/css">
+        #map { height: 600px; width: 100%; margin-bottom: 12px; }
+        #map .card-content, .chart-container .card-content { padding: 5px 10px; }
+        #map .card-content strong { font-weight: bold; }
+        .feature-info { width: auto; }
+    </style>
+{% endblock %}
+
+{% block content-title %}
+{% if LANGUAGE_CODE == "en" %}
+Run-off
+{% else %}
+Limpasan permukaan
+{% endif %}
+{% endblock %}
+
+{% block content-body %}
+
+    <br>
+
+    <div class="content-box">
+      <div class="row">
+        <div class="col s12 m12 l12">
+          
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block custom-footer %}
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaflet-legend.js' %}"></script>
+<script type="text/javascript">
+  var range_value = [2,5,10,20,55];
+  var range_color = [ "#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"];
+  var minval = 0;
+  var maxval = range_value[range_value.length];
+  var polygon_border_color = "#fbc02d";
+  var polygon_blank_color = "#ccc";
+  var legend_icon = "{% static 'images/legend.png' %}";
+
+  var custom_field_name = "Runoff30G";
+  var data_unit = "mm H2O";
+  var legend_title = "Limpasan permukaan";
+
+  function getOnFeatureMouseOver(e) {
+    var layer = e.target;
+    info.update(layer.feature.properties);
+
+    var oe = e.containerPoint; 
+    var height = $(".feature-info").height();
+    var left = oe.x;
+    var top = oe.y;
+    if (600-height < top) top -= height;
+    $(".feature-info").css({top: top + 'px', left: left + 'px', position:'absolute'});
+    //console.log($(".feature-info").height())
+  }
+
+  function getOnFeatureMouveOut(e) {
+    info.update();
+  }
+
+  function getOnEachFeature(feature,layer) {
+    layer.on({
+        mouseover: getOnFeatureMouseOver,
+        mouseout: getOnFeatureMouveOut
+    });
+  }
+
+  function getInfoOnAdd(map) {
+    this._div = L.DomUtil.create('div', 'card feature-info');
+    this.update();
+    return this._div;
+  }
+
+  function getInfoOnUpdate(props) {
+    var strInfo = "";
+    
+    if (props) {
+      strInfo = "<b>" + props[custom_field_name] + "</b> " + data_unit;
+      strInfo = strInfo.replace(" ","&nbsp;");
+      strInfo = strInfo.replace(" ","&nbsp;");
+    }
+
+    var div = L.DomUtil.create("div", "card-content");
+    div.innerHTML = strInfo;
+
+    this._div.innerHTML = (props) ? div.outerHTML : strInfo;
+  };
+
+  function getColorIndex(value) {
+    var maxlength = range_color.length;
+    var tmp = value; // / 1000;
+
+    if (tmp > maxval || tmp < minval) return -1;
+    if (tmp < range_value[0] ) return 0
+
+    for ( i = 1; i < maxlength; i++ ) {
+      if( tmp >= range_value[i-1] && tmp < range_value[i] ) { return i; }
+    }
+
+    return maxlength-1;
+  }
+
+  function getStyle(feature) {
+    var luas = feature.properties[custom_field_name];
+    var cIndex = getColorIndex(luas);
+    var fillColor = (cIndex >= 0) ? range_color[cIndex] : polygon_blank_color;
+
+    return { color: "#666", weight: 1, fillColor: fillColor, fillOpacity: .6 };
+  }
+
+  var map = new L.Map('map');
+  var info = L.control({ position: "topleft" });
+
+  $.getJSON("{% static 'data/geojson/Hidrology.geojson' %}", function(data){
+    var layer_options = { style: getStyle };
+    layer_options["onEachFeature"] = getOnEachFeature;
+    var layer = L.geoJson(data,layer_options);
+    layer.addTo(map);
+    map.fitBounds(layer.getBounds());
+
+    var legend_options = { 
+        range_value: range_value, 
+        range_color: range_color, 
+        header_template: "<strong>" + legend_title + " <span style='font-size:smaller'>(" + data_unit + ")</span><br></strong>", 
+        header_data: "",
+        buttonIcon: legend_icon
+    };
+    var legend = L.control.legend(legend_options);
+    map.addControl(legend);
+
+    info.onAdd = getInfoOnAdd;
+    info.update = getInfoOnUpdate;
+    info.addTo(map);
+  })
+
+</script>
+{% endblock %}

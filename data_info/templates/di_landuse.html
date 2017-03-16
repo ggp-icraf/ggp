@@ -1,0 +1,174 @@
+{% extends "di_base.html" %}
+{% load staticfiles%}
+
+{% block custom-head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <style type="text/css">
+        #map { height: 600px; width: 100%; margin-bottom: 12px; }
+        .feature-info { width: auto; }
+
+        .leaflet-tooltip { background: transparent; border-color: transparent; box-shadow: none; }
+        .leaflet-tooltip-right:before { border-right-color: transparent; }
+    </style>
+{% endblock %}
+{% block content-title %}
+{% if LANGUAGE_CODE == "en" %}
+Land use
+{% else %}
+Tataguna lahan
+{% endif %}
+{% endblock %}
+
+{% block content-body %}
+    <!-- <p>Pellentesque pede. Donec pulvinar ullamcorper metus. In eu odio at lectus pulvinar mollis. Vestibulum sem magna, elementum ut, vestibulum eu, facilisis quis, arcu. Mauris a dolor. Nulla facilisi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed blandit. Phasellus pellentesque, ante nec iaculis dapibus, eros justo auctor lectus, a lobortis lorem mauris quis nunc. Praesent pellentesque facilisis elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. In hac habitasse platea dictumst. Nullam id ante eget dui vulputate aliquam. Pellentesque erat erat, tincidunt in, eleifend accumsan, malesuada eget, augue. Suspendisse sit amet tellus in eros bibendum condimentum. Vestibulum suscipit volutpat nulla. Maecenas pede nisl, elementum eu, ornare ac, malesuada at, erat. Proin gravida orci porttitor enim accumsan lacinia. Donec condimentum, urna non molestie semper, ligula enim ornare nibh, quis laoreet eros quam eget ante. Aliquam libero. Vivamus nisl nibh, iaculis vitae, viverra sit amet, ullamcorper vitae, turpis. Aliquam erat volutpat. Vestibulum dui sem, pulvinar sed, imperdiet nec, iaculis nec, leo. Fusce odio. Etiam arcu dui, faucibus eget, placerat vel, sodales eget, orci. Donec ornare neque ac sem. Mauris aliquet. Aliquam sem leo, vulputate sed, convallis at, ultricies quis, justo. Donec nonummy magna quis risus. Quisque eleifend. Phasellus tempor vehicula justo. Aliquam lacinia metus ut elit. Pellentesque pede. Donec pulvinar ullamcorper metus. In eu odio at lectus pulvinar mollis.</p> -->
+
+    <div class="content-box">
+      <div class="row">
+        <div class="col s12 m12 l12">
+          
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m12 l10 offset-l1">            
+            <p align="center"><img id="img-legend" class="responsive-img" src="{% static 'images/Tataguna_lahan_legenda.png' %}" />
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block custom-footer %}
+<script src="{% static 'js/spin.min.js' %}"></script>
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaflet.spin.js' %}"></script>
+
+<script type="text/javascript">
+  var hti_color = ["#C500FF"]
+  var geojson_path = "{% static 'data/geojson/' %}";
+  var icon_url = "{% static 'images/circle_green_16.png' %}";
+
+  var admin_border_color = "#fbc02d";
+  var admin_color = "#fff"
+  var road_color = "#999";
+
+  var hti_color = "#C500FF";
+  var tambang_color = "#FF0000";
+  var rtrw_color = {
+    "Kawasan Peruntukan Holding Zone": "#AAA",
+    "Kawasan Peruntukan Hutan Lindung": "#38A800",
+    "Kawasan Peruntukan Hutan Produksi Konversi": "#89CD66",
+    "Kawasan Peruntukan Hutan Produksi Terbatas": "#ABCD66",
+    "Kawasan Peruntukan Hutan Produksi Tetap": "#CDCD66",
+    "Kawasan Peruntukan Hutan Suaka Alam": "#55FF00",
+    "Kawasan Peruntukan Hutan Suaka Alam Laut": "#448970",
+    "Kawasan Peruntukan Industri": "#FF2D32",
+    "Kawasan Peruntukan Instalasi Militer": "#000000",
+    "Kawasan Peruntukan Lainnya": "#A87000",
+    "Kawasan Peruntukan Pariwisata": "#A900E6",
+    "Kawasan Peruntukan Perikanan": "#00FFC5",
+    "Kawasan Peruntukan Perkebunan": "#CCCCCC",
+    "Kawasan Peruntukan Permukiman": "#F57AB6",
+    "Kawasan Peruntukan Pertanian Pangan dan Horti": "#FFFF00",
+    "Kawasan Peruntukan Peternakan": "#E6E600",
+    "Kawasan Sempadan Sungai": "#00C5FF",
+    "Perairan": "#0070FF",
+  };
+
+  var admin_option = { color: admin_border_color, weight: 1, fillColor: admin_color, fillOpacity: .6 };
+  var road_option = { weight: 1, color: road_color};
+  var city_option =  {pointToLayer: onPointToLayer};
+  var hti_option = { color: "#000", weight: 1, fillColor: hti_color, fillOpacity: .6 };
+  var kebun_option = { style: KebunStyle };
+  var tambang_option = { color: "#000", weight: 1, fillColor: tambang_color, fillOpacity: .6 };
+  var rtrw_option = { style: RtrwStyle };
+  
+  var layerlist = [
+    {name:"Batas Kabupaten", file: "batas_admin.geojson", main: true, option: admin_option},
+    {name:"Jalan", file: "jalan.geojson", main: false, option: road_option},
+    {name:"Ibukota Kabupaten", file: "ibukota_kabupaten2.geojson", main: false, option: city_option},
+    {name:"Hutan Tanaman Industri", file: "datainfo_landuse_hti.geojson", main: false, option: hti_option},
+    {name:"Hutan Tanaman Perkebunan", file: "datainfo_landuse_kebun.geojson", main: false, option: kebun_option},
+    {name:"Kawasan Izin Pertambangan", file: "datainfo_landuse_tambang.geojson", main: false, option: tambang_option},
+    {name:"Rencana Tata Ruang", file: "datainfo_landuse_rtrwp.geojson", main: false, option: rtrw_option},
+  ];
+
+  var map = new L.Map("map");
+  map.spin(true);
+  GenerateMap(0,null,{});
+  
+  function GenerateMap(index,main,overlays) {
+    if (index < layerlist.length) {
+      var layer_name = layerlist[index].name;
+      var layer_file = layerlist[index].file;
+      var main_layer = layerlist[index].main;
+      var layer_option = layerlist[index].option;
+
+      $.getJSON(geojson_path + layer_file).done( function(data) { 
+        var layer = L.geoJson(data,layer_option);
+        layer.addTo(map);
+        //layer.fire('data:loading');
+        overlays[layer_name] = layer;
+
+        if (main_layer) main = layer;
+        GenerateMap(index+1,main,overlays);
+      });
+    }
+    else {
+      map.fitBounds(main.getBounds());
+      L.control.layers( null, overlays, { position:"topright" } ).addTo(map);
+      HackLayerControlStyle();
+      map.spin(false);
+    }
+  }
+
+  function onPointToLayer(feature,latlng) {
+    var greenIcon = L.icon( {iconUrl: icon_url, iconSize: [16,16]} );
+    var cm = L.marker(latlng, {icon: greenIcon})
+    cm.bindTooltip(feature.properties.Kota, { permanent: true, direction: 'right' });
+    return cm;
+  }
+
+  function KebunStyle(feature) {
+    var komoditi = feature.properties.KOMODITI;
+    var fillColor = (komoditi == "Karet") ? "#730000" : "#828282";
+
+    return { color: "#000", weight: 1, fillColor: fillColor, fillOpacity: .6 };
+  }
+
+  function RtrwStyle(feature) {
+    var komoditi = feature.properties.PolaPlan;
+    var fillColor = rtrw_color[komoditi];
+
+    return { color: "#000", weight: 1, fillColor: fillColor, fillOpacity: .6 };
+  }
+
+  function HackLayerControlStyle() {
+    var classname = "leaflet-control-layers-selector";
+    var label_classname = classname + "-label"
+    
+    $( "." + classname ).each(function(idx) {
+      var type = $(this).attr("type");
+      var input_id = ((type=="radio") ? $(this).attr("name")  : "layer-control-checkbox") + "-" + idx;
+
+      var span = $(this).next();
+      var item_text = span.text();
+
+      var new_item = "<label class='" + label_classname + "' for='" + input_id + "''>" + item_text + "</label>"
+      var new_class = (type=="radio") ? "with-gap" : "filled-in";
+
+      $(this).addClass(new_class);
+      $(this).attr("id",input_id)
+      span.remove();
+      $(this).after(new_item);
+    });    
+  }
+
+</script>
+
+<!-- <script src="{% static 'js/history/mapHelper.js' %}"></script> -->
+
+{% endblock %}

@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block custom-head %}
+  <style type="text/css">
+    .banner-color { color:#009b4c; }
+    .btn-home { display: block; }
+    /*.h5-home { height: 65px; }*/
+    .h5-home { height: 50px; }
+    .h5-home h5 { width: 100% }
+
+    h2.header { font-weight: bold; color: #92D050; font-size: 49px; }
+    h4.header { font-size: 28px; color: #fff; }
+
+    img.logo { width: 180px; }
+    a.btn { background-color: #ffe593; color: #000 }
+    @media only screen and (min-width : 993px) { img.logo { float: left; margin-top:-35px; margin-left: 125px; } }
+    @media only screen and (min-width : 993px) { div.banner-section { padding-top: 35px; } }
+    @media only screen and (min-width : 993px) { p.light { min-height: 67px; } }
+    @media only screen and (min-width: 600px) and (max-width: 992px) { p.light { min-height: 83px; } }
+    @media only screen and (min-width: 600px) { .banner-box { border-right: solid 1px lightgray;} }
+  </style>
+{% endblock %}
+
+{% block home-banner %}
+  <nav class="lime darken-3" role="navigation">
+    <div class="nav-wrapper valign-wrapper">
+      <div class="container">
+        <div class="row" style="margin-bottom: 0">
+          <div class="col s12 m6 l3 right right-align">
+            <a href='#' class="dropdown-button white-text lang-selector" style="line-height: 32px; height: 32px; font-size: 14px; display: block;" data-beloworigin="true" data-activates='dropdown1' data-alignment='right'>
+                {% if LANGUAGE_CODE == "en" %}
+                  English <img src="{% static 'images/en.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin:-5px 5px 0px;" />
+                {% else %}
+                  Bahasa Indonesia <img src="{% static 'images/id.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin:-5px 5px 0px;" /> 
+                {% endif %}
+              </a>
+              <ul id='dropdown1' class='dropdown-content'>
+                <li style="line-height: 32px; min-height: 32px;">
+                  <a href="#!" class="right-align lang-item" style="line-height: 32px; height: 32px; font-size: 14px; padding: 0;">
+                  {% if LANGUAGE_CODE == "en" %}
+                    Indonesian <img src="{% static 'images/id.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin:-5px 5px 0px;" />
+                  {% else %}
+                    Bahasa Inggris <img src="{% static 'images/en.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin:-5px 5px 0px;" />
+                  {% endif %}
+                  </a>
+                </li>
+              </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <footer class="page-footer center" style="background-color: #594740">
+    <img class="logo" src="{% static 'images/South_Sumatra_COA_512.png' %}">
+    <div class="container">
+    {% if LANGUAGE_CODE == "en" %}
+      <!-- <h1 class="header center banner-color" style="font-weight: bold; margin: 0;">GREEN GROWTH PLAN</h1>
+      <h1 class="header center" style="font-weight: bold; margin: 0;">SOUTH SUMATERA</h1> -->
+      <h2 class="header" style="margin-bottom: 5px;">Masterplan Pertumbuhan Ekonomi Hijau</h2>
+      <h4 class="header">Berbasiskan Sumber Daya Alam terbarukan Sumatera Selatan 2017-2030</h4>
+    {% else %}
+      <!-- <h1 class="header center banner-color" style="font-weight: bold; margin: 0;">GREEN GROWTH PLAN</h1>
+      <h1 class="header center" style="font-weight: bold; margin: 0;">SUMATERA SELATAN</h1> -->
+      <h2 class="header" style="margin-bottom: 5px;">Masterplan Pertumbuhan Ekonomi Hijau</h2>
+      <h4 class="header">Berbasiskan Sumber Daya Alam terbarukan Sumatera Selatan 2017-2030</h4>
+    {% endif %}
+      <br>
+    </div>
+  </footer>
+{% endblock %}
+
+{% block main-content %}
+  <div class="container">
+    <div class="section banner-section">
+
+      <div class="row">
+        <div class="col s12 m4 banner-box">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              {% if LANGUAGE_CODE == "en" %}
+              <h5 class="center">About</h5>
+              {% else %}
+              <h5 class="center">Tentang</h5>
+              {% endif %}
+            </div>
+
+            {% if LANGUAGE_CODE == "en" %}
+            <p class="light">Latar belakang, visi dan ruang lingkup pertumbuhan ekonomi hijau Sumatera Selatan 2017-2030</p>
+            <a href="/{{ LANGUAGE_CODE }}/about" class="btn btn-home">More..</a>
+            {% else %}
+            <p class="light">Latar belakang, visi dan ruang lingkup pertumbuhan ekonomi hijau Sumatera Selatan 2017-2030</p>
+            <a href="/{{ LANGUAGE_CODE }}/about" class="btn btn-home">Selengkapnya..</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col s12 m4 banner-box">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              {% if LANGUAGE_CODE == "en" %}
+              <h5 class="center valign">Method & Tools</h5>
+              {% else %}
+              <h5 class="center valign">Metode & Alat</h5>
+              {% endif %}
+            </div>
+
+            {% if LANGUAGE_CODE == "en" %}
+            <p class="light">Uraian kerangka kerja, alat bantu dan metode perencanaan pertumbuhan ekonomi hijau<br></p>
+            <a href="/{{ LANGUAGE_CODE }}/method_tools" class="btn btn-home">More..</a>
+            {% else %}
+            <p class="light">Uraian kerangka kerja, alat bantu dan metode perencanaan pertumbuhan ekonomi hijau<br></p>
+            <a href="/{{ LANGUAGE_CODE }}/method_tools" class="btn btn-home">Selengkapnya..</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- <div class="col s12 m4 banner-box"> -->
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              {% if LANGUAGE_CODE == "en" %}
+              <h5 class="center valign">Data & Information</h5>
+              {% else %}
+              <h5 class="center valign">Data & Informasi</h5>
+              {% endif %}
+            </div>
+
+            {% if LANGUAGE_CODE == "en" %}
+            <p class="light">Kumpulan data, informasi dan dokumen yang digunakan dalam penyusunan rencana pertumbuhan ekonomi hijau</p>
+            <a href="/{{ LANGUAGE_CODE }}/data_info" class="btn btn-home">More..</a>
+            {% else %}
+            <p class="light">Kumpulan data, informasi dan dokumen yang digunakan dalam penyusunan rencana pertumbuhan ekonomi hijau</p>
+            <a href="/{{ LANGUAGE_CODE }}/data_info" class="btn btn-home">Selengkapnya..</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- <div class="col s12 m3">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              <h5 class="center">Green Growth Plan</h5>
+            </div>
+
+            <p class="light">Curabitur sit amet nulla. Nam in massa. Sed vel tellus. Curabitur sem urna, consequat vel, suscipit in, mattis placerat, nulla. Sed ac leo.</p>
+            <a class="btn btn-home">More..</a>
+          </div>
+        </div> -->
+
+      </div>
+
+      <div class="row">
+        <div class="col s12 m4 banner-box">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              {% if LANGUAGE_CODE == "en" %}
+              <h5 class="center valign">History</h5>
+              {% else %}
+              <h5 class="center valign">Kondisi historis</h5>
+              {% endif %}
+            </div>
+
+            {% if LANGUAGE_CODE == "en" %}
+            <p class="light">Data dan analisa mengenai kondisi Sumatera Selatan masa lalu dan saat ini dari berbagai aspek</p>
+            <a href="/{{ LANGUAGE_CODE }}/history" class="btn btn-home">More..</a>
+            {% else %}
+            <p class="light">Data dan analisa mengenai kondisi Sumatera Selatan masa lalu dan saat ini dari berbagai aspek</p>
+            <a href="/{{ LANGUAGE_CODE }}/history" class="btn btn-home">Selengkapnya..</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- <div class="col s12 m3 banner-box">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              <h5 class="center">About</h5>
+            </div>
+
+            <p class="light">Curabitur sit amet nulla. Nam in massa. Sed vel tellus. Curabitur sem urna, consequat vel, suscipit in, mattis placerat, nulla. Sed ac leo.</p>
+            <a href="/about" class="btn btn-home">More..</a>
+          </div>
+        </div> -->
+
+        <div class="col s12 m4 banner-box">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              {% if LANGUAGE_CODE == "en" %}
+              <h5 class="center valign">Business as Usual</h5>
+              {% else %}
+              <h5 class="center valign">Bisnis Seperti Biasa</h5>
+              {% endif %}
+            </div>
+
+            {% if LANGUAGE_CODE == "en" %}
+            <p class="light">Skenario <i>Bisnis Seperti Biasa</i> di Sumatera Selatan berdasarkan data perencanaan dan pemodelan LUMENS</p>
+            <a href="/{{ LANGUAGE_CODE }}/bau" class="btn btn-home">More..</a>
+            {% else %}
+            <p class="light">Skenario <i>Bisnis Seperti Biasa</i> di Sumatera Selatan berdasarkan data perencanaan dan pemodelan LUMENS</p>
+            <a href="/{{ LANGUAGE_CODE }}/bau" class="btn btn-home">Selengkapnya..</a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="col s12 m4">
+          <div class="icon-block">
+            <div class="valign-wrapper h5-home">
+              {% if LANGUAGE_CODE == "en" %}
+              <h5 class="center">Green Growth Plan</h5>
+              {% else %}
+              <h5 class="center">Green Growth Plan</h5>
+              {% endif %}
+            </div>
+
+            {% if LANGUAGE_CODE == "en" %}
+            <p class="light">Skenario Pertumbuhan Ekonomi Hijau di Sumatera Selatan berdasarkan data perencanaan dan pemodelan LUMENS</p>
+            <a href="/{{ LANGUAGE_CODE }}/ggp" class="btn btn-home">More..</a>
+            {% else %}
+            <p class="light">Skenario Pertumbuhan Ekonomi Hijau di Sumatera Selatan berdasarkan data perencanaan dan pemodelan LUMENS</p>
+            <a href="/{{ LANGUAGE_CODE }}/ggp" class="btn btn-home">Selengkapnya..</a>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="page-footer center" style="padding-top: 0px; margin-top: 10px;">
+    <div class="footer-copyright" style="background-color: #fff; height: 100px; ">
+      <div class="container right-align">
+        <img src="{% static 'images/idh_logo.jpeg' %}" height="100px">
+        <img src="{% static 'images/icraf_logo.jpeg' %}" height="100px">
+      </div>
+    </div>
+  </footer>
+{% endblock %}

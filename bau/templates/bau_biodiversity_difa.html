@@ -1,0 +1,158 @@
+{% extends "bau_base.html" %} {% load staticfiles %} {% block content-title %}DIFA{% endblock %} {% block content-body %}
+<p>Suatu bentang lahan memiliki beragam jenis tutupan lahan yang tersusun dengan kompleks dan beragam. Seiring dengan konversi
+    lahan yang terjadi dari waktu ke waktu, konfigurasi spasial dari tutupan lahan penyusun bentang alam mengalami perubahan.
+    Konversi lahan yang terjadi memengaruhi berbagai faktor terkait keanekaragaman hayati di suatu bentang alam melalui beberapa
+    proses utama antara lain: perubahan luas habitat dan derajat keterhubungan antar bidang habitat. Selain itu, aktivitas
+    manusia kerap menimbulkan gangguan pada area tutupan alami yang menyebabkan penurunan kualitas habitat. Untuk merangkum
+    pengaruh konfigurasi tutupan lahan yang berubah secara dinamis terhadap kondisi keanekaragaman hayati pada suatu bentang
+    lahan, disusun suatu indeks numerik sederhana yang disebut Degree of Integration of Focal Area, atau disingkat DIFA (Dewi
+    et al. 2013). Melalui indeks DIFA, pemangku kepentingan diharapkan dapat memahami secara lebih jelas pengaruh dari suatu
+    kebijakan tata guna lahan, baik yang telah terjadi di masa lampau atau yang akan datang, terhadap keanekaragaman hayati
+    sehingga aspek kelestarian keanekaragaman hayati dapat turut diperhatikan dalam proses pengambilan keputusan.</p>
+
+
+<div class="content-box" style="padding: 20px 15px 0px;">
+    <div class="row">
+        <div class="input-field col s12 m12 l5">
+            <select id="cbType">            
+              <option value="{{ c.value }}" disabled selected>{% if LANGUAGE_CODE == "en" %}Select forest type{% else %}Pilih tipe hutan{% endif %}</option>
+              <option value="Mangrove" >Mangrove</option>              
+              <option value="Swamp_Forest">Swamp Forest</option>
+              <option value="Terrestrial_Forest">Terrestrial Forest</option>              
+            
+          </select>
+            <label>{% if LANGUAGE_CODE == "en" %}Forest type{% else %}Tipe hutan{% endif %}</label>
+        </div>
+        <div class="input-field col s12 m12 l5">
+            <select id="cbPeriod">
+           
+              <option value='' disabled selected>{% if LANGUAGE_CODE == "en" %}Select period{% else %}Pilih periode{% endif %}</option>
+           
+              <option value='2018-2022' >2018-2022</option>
+              <option value='2026-2030' >2026-2030</option>
+           
+          </select>
+            <label>{% if LANGUAGE_CODE == "en" %}Period{% else %}Periode{% endif %}</label>
+        </div>
+        <div class="input-field col s12 m12 l2 center-align">
+            <a id="btnShow" class="waves-effect waves-light btn">{% if LANGUAGE_CODE == "en" %}Show{% else %}Tampilkan{% endif %}</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col s12 m6">
+        <div class="content-box">
+            <div class="row content-heading" style="margin-bottom: 12px;">
+                <span id="title0"></span>
+            </div>
+            <div class="row">
+                <div id="container0" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+            <div class="row">
+                <table0>
+            </div>
+        </div>
+    </div>
+    <div class=" col s12 m6">
+        <div class="content-box">
+            <div class="row content-heading" style="margin-bottom: 12px;">
+                <span id="title1"></span>
+            </div>
+            <div class="row">
+                <div id="container1" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+            <div class="row">
+                <table1>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+{% endblock %} {% block custom-footer %}
+
+<script src="{% static 'js/d3.min.js' %}"></script>
+<script src="{% static 'js/history/d3table.js' %}"></script>
+<script src="{% static 'js/history/difachart.js' %}"></script>
+<script src="{% static 'js/jquery.dataTables.min.js'  %}"></script>
+<script src="{% static 'js/dataTables.fixedColumns.min.js'  %}"></script>
+<script src="{% static 'js/dataTables.scroller.min.js'  %}"></script>
+
+<script src="{% static 'js/dataTables.material.min.js'  %}"></script>
+<script src="{% static 'js/highcharts.js' %}"></script>
+<script src="{% static 'js/highcharts-more.js' %}"></script>
+<script type="text/javascript">
+    var path = "";
+    var language = "{{ LANGUAGE_CODE }}";
+    var table_header = [];
+    var table_class = "compact responsive-table bordered striped centered";
+    var header_class = "yellow darken-2";
+
+    $(document).ready(function () {
+        $('select').material_select();
+    });
+    $(document).on('click', '#btnShow', function () {
+        path = "{% static 'data/csv/bau_kehati_difa/' %}";
+        path += $('#cbType').val() + '/' + $('#cbPeriod').val().replace('-', '_') + '/';
+        LoadData($('#cbPeriod').val());
+
+    })
+
+    function RepairData(d) {
+        table_header = Object.keys(d);
+        var data = {};
+        $.each(table_header, function () {
+            if (isNaN(d[this])) {
+                data[this] = d[this];
+            } else {
+
+                data[this] = Math.round(d[this] * 10000) / 10000;
+            }
+        });
+        return data;
+
+
+    }
+
+    function LoadData(period) {
+        var periods = period.split('-');
+        $.each(periods, function (idx) {
+            $('#title' + idx).text(this);
+            d3.csv(path + this.toString() + ".csv", RepairData, function (d) {
+                console.log(d);
+                $('#table' + idx).remove('');
+                GenerateTableD3("table" + idx, d, table_header, table_header, table_class, header_class, "table" + idx);
+                var teci = function () {
+                    var arr = [];
+                    $.each(d, function (idx) {
+                        if (idx > 0) {
+                            arr.push(this['TECI(%)']);
+                        }
+
+                    })
+                    return arr;
+                }
+                var cumullative = function () {
+                    var arr = [];
+                    $.each(d, function (idx) {
+
+                        if (idx > 0) {
+                            arr.push(this['Cumulative Habitat(%)']);
+                        }
+
+                    })
+                    return arr;
+                }
+
+                difachart('container' + idx, teci(), cumullative());
+            });
+        });
+
+    }
+
+</script>
+
+{% endblock %}

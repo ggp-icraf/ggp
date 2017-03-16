@@ -1,0 +1,124 @@
+{% extends "di_base.html" %} {% load staticfiles%} {% block custom-head %} {{ block.super }}
+<link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+<!--<link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />-->
+<style type="text/css">
+        
+        table.compact td,th { padding: 5px; }
+        table.compact tr { border-bottom: 1px solid #fff; }
+        table.compact td { font-size: 14px; }
+        .bar { fill: #ff7f0e; }
+        .fixed_cols {            
+            padding: 15px 7px;
+            width: 155px !important;
+            font-weight: bold;
+        }       
+
+        div.DTFC_LeftWrapper table.dataTable,
+        div.DTFC_LeftWrapper table.dataTable td,
+        div.DTFC_LeftWrapper table.dataTable th {
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+           box-sizing: content-box;
+        }
+        table.dataTable td,
+        table.dataTable th {
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+        }
+
+    </style>
+{% endblock %} 
+{% block content-title %}Keanekaragaman Hayati{% endblock %} {% block content-body %}
+<!-- <p>Pellentesque pede. Donec pulvinar ullamcorper metus. In eu odio at lectus pulvinar mollis. Vestibulum sem magna, elementum
+    ut, vestibulum eu, facilisis quis, arcu. Mauris a dolor. Nulla facilisi. Cum sociis natoque penatibus et magnis dis parturient
+    montes, nascetur ridiculus mus. Sed blandit. Phasellus pellentesque, ante nec iaculis dapibus, eros justo auctor lectus,
+    a lobortis lorem mauris quis nunc. Praesent pellentesque facilisis elit. Class aptent taciti sociosqu ad litora torquent
+    per conubia nostra, per inceptos hymenaeos. In hac habitasse platea dictumst. Nullam id ante eget dui vulputate aliquam.
+    Pellentesque erat erat, tincidunt in, eleifend accumsan, malesuada eget, augue. Suspendisse sit amet tellus in eros bibendum
+    condimentum. Vestibulum suscipit volutpat nulla. Maecenas pede nisl, elementum eu, ornare ac, malesuada at, erat. Proin
+    gravida orci porttitor enim accumsan lacinia. Donec condimentum, urna non molestie semper, ligula enim ornare nibh, quis
+    laoreet eros quam eget ante. Aliquam libero. Vivamus nisl nibh, iaculis vitae, viverra sit amet, ullamcorper vitae, turpis.
+    Aliquam erat volutpat. Vestibulum dui sem, pulvinar sed, imperdiet nec, iaculis nec, leo. Fusce odio. Etiam arcu dui,
+    faucibus eget, placerat vel, sodales eget, orci. Donec ornare neque ac sem. Mauris aliquet. Aliquam sem leo, vulputate
+    sed, convallis at, ultricies quis, justo. Donec nonummy magna quis risus. Quisque eleifend. Phasellus tempor vehicula
+    justo. Aliquam lacinia metus ut elit. Pellentesque pede. Donec pulvinar ullamcorper metus. In eu odio at lectus pulvinar
+    mollis.</p> -->
+<div class="content-box" style="" >
+<div class="row">
+    <table1plan>
+</div>
+
+</div>
+{% endblock %} 
+{% block custom-footer %}
+<script src="{% static 'js/d3.min.js' %}"></script>
+<script src="{% static 'js/history/d3table.js' %}"></script>
+<script src="{% static 'js/jquery.dataTables.min.js'  %}"></script>
+<script src="{% static 'js/dataTables.fixedColumns.min.js'  %}"></script>
+<script src="{% static 'js/dataTables.scroller.min.js'  %}"></script>
+
+<script src="{% static 'js/dataTables.material.min.js'  %}"></script>
+
+<script type="text/javascript">
+    var table_header = [];
+    function RepairData(d) {
+        table_header = Object.keys(d);
+        var data = {};
+        $.each(table_header, function() {
+            if (isNaN(d[this])) {
+                data[this] = d[this];
+            }else {
+                
+                data[this] = Math.round(d[this] * 10000) / 10000;
+            }
+        });
+        return data;
+      
+
+    }
+
+    var path = "{% static 'data/csv/' %}";
+    var language = "{{ LANGUAGE_CODE }}";       
+    var table_class = "compact responsive-table bordered striped centered";
+    var header_class = "yellow darken-2";
+
+    d3.csv(path + "datainfo_env_biodiversity_2" + ".csv", RepairData
+        , function (d) {
+            GenerateTableD3("table1plan", d, table_header, table_header, table_class, header_class, "table1");
+            var oTable = {};
+            oTable = $('#table1').DataTable({
+                        "dom": "lfrti",
+                        scrollY: "400px",
+                        scrollX: true,
+                        scrollCollapse: true,
+                        scroller: true,
+                        fixedColumns: {
+                            leftColumns: 1,
+                        },
+                        info: false,
+                        searching: false,
+                        ordering: false,
+                        lengthChange: false,
+                        columnDefs: [{
+                            width: "155px",
+                            targets: 0,
+                            className: 'yellow darken-2 fixed_cols'
+                        }]
+                    });
+                     
+            $('#table1 tbody tr').each(function(idx) {
+                var col = $(this).find('td');
+                if (idx == 0) {
+                    return;
+                } else {
+                    for(var i=0; i<=idx; i++) {                    
+                        $(col[i]).attr('style', 'background-color: #9297a0; color: #9297a0');
+                    }
+                }
+            });
+            
+        });
+
+</script>
+{% endblock %}

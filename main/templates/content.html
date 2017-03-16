@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load staticfiles%}
+
+{% block custom-head %}
+  <style type="text/css">
+    main, header { padding-left: 300px; }
+    @media only screen and (max-width : 992px) {
+      header, main { padding-left: 0; }
+    }
+
+    /*.section.content { padding-left: 25px; padding-right: 25px; }*/
+    .section.content { padding: 0 25px 1rem }
+    .input-field label { font-weight: bold;  }
+    
+    .content img { margin: 3px 10px; }
+    img.border { border: 1px solid grey; }
+    .content-heading { background-color: #8bc34a; color: #FFF; font-size: 1.64rem; text-align: right; padding: 5px 15px; /*text-transform: capitalize;*/ }
+    .content-box { margin-bottom: 15px; background: #ddd }
+
+    td.left-align { text-align: left !important; }
+    td.center-align { text-align: center !important; }
+    td.text-indent { text-indent: 25px; }
+
+    /* Custom CSS for left menu */
+    /*.userView.header { padding-bottom: 32px; margin-bottom: 0px; box-shadow: 0 0 5px 0; }*/
+    .userView.header { padding: 6px 16px 8px 16px; margin-bottom: 0px; box-shadow: 0 2px 3px 0 #999; }
+    .banner-color { color:#009b4c; }
+    .banner-header { color: #fff; }
+    h3.banner-header { margin: 0 16px; padding: 15px 0 0px 0; }
+    h3.banner-header a { font-size: 2.92rem; line-height: 110%; }
+
+    .collapsible-body li a { font-weight: normal; line-height: inherit; height: inherit; font-size: 12px; }
+    .collapsible-body li { line-height: 32px; height: 32px; }
+    .side-nav .divider { margin: 0 }
+    .side-nav li a { padding-left: 16px; }
+    .side-nav.fixed .collapsible-header, .side-nav.fixed .collapsible-header.active { background-color: #fff; }
+
+    nav ul a { padding: 0 10px; }
+
+    ul.standard-list { list-style-type: disc; padding: 0; padding-left: 40px; }
+    ul.standard-list li { list-style-type: disc; }
+
+    /*div.submenu li a { padding-left: 54px !important; font-style: italic; font-size: 12px; border-bottom: 1px solid #f1f1f1; }*/
+    div.submenu li a { padding-left: 54px !important; }
+    div.submenu li a::before { content: "»"; margin-right: 10px; }
+    /*div.submenu li:first-child { border-top: 1px solid #f1f1f1; }*/
+
+    .chart-container .card-content { text-align: center; background-color: transparent; box-shadow: none; font-size: 24px; margin: 0; }
+
+  </style>
+{% endblock %}
+
+{% block sidebar %}
+  <header>
+    <!-- Top Navigation -->
+    <nav class="lime darken-3" role="navigation" style="margin-left: 1px;">
+      <div class="nav-wrapper" style="margin: 0 32px;">
+        <!--a id="logo-container" href="/" class="brand-logo">GGP-IS</a-->
+        <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        
+        <ul class="right hide-on-med-and-down">
+          {% if LANGUAGE_CODE == "en" %}
+          <!--li><a href="/">Home</a></li-->
+          <li><a href="/{{ LANGUAGE_CODE }}/about">About</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/method_tools">Method & Tools</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/data_info">Data & Information</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/history">Historical Condition</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/bau">Business as Usual</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/ggp">Green Growth Plan</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/help">Help</a></li>
+          {% else %}
+          <li><a href="/{{ LANGUAGE_CODE }}/about">Tentang</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/method_tools">Metode & Alat</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/data_info">Data & Informasi</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/history">Kondisi Historis</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/bau">Bisnis Seperti Biasa</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/ggp">Green Growth Plan</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/help">Bantuan</a></li>
+          {% endif %}
+        </ul>
+
+        <ul id="mobile-demo" class="side-nav">
+          {% if LANGUAGE_CODE == "en" %}
+          <!--li><a href="/">Home</a></li-->
+          <li><a href="/{{ LANGUAGE_CODE }}/about">About</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/method_tools">Method & Tools</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/data_info">Data & Information</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/history">Historical Condition</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/bau">Business as Usual</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/ggp">Green Growth Plan</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/help">Help</a></li>
+          {% else %}
+          <li><a href="/{{ LANGUAGE_CODE }}/about">Tentang</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/method_tools">Metode & Alat</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/data_info">Data & Informasi</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/history">Kondisi Historis</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/bau">Bisnis Seperti Biasa</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/ggp">Green Growth Plan</a></li>
+          <li><a href="/{{ LANGUAGE_CODE }}/help">Bantuan</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <!--ul id="slide-out" class="side-nav" style="transform: translateX(0%); /*top:64px;*/"-->
+    <ul id="slide-out" class="side-nav fixed">
+      <li class="lime darken-3">
+        
+        <h3 class="banner-header center-align">
+          <a href="/{{ LANGUAGE_CODE }}" style="padding: 0px; color: #fff;">GGP-IS</a>
+          <div class="divider"></div>
+        </h3>
+
+      </li>
+      <li class="lime darken-3" style="line-height: 32px; padding: 3px;">
+        <a href='#' class="dropdown-button white-text center-align lang-selector" style="line-height: 32px; height: 32px; font-size: 12px;" data-beloworigin="true" data-activates='dropdown1' data-alignment='right'>
+          {% if LANGUAGE_CODE == "en" %}
+            <img src="{% static 'images/en.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin-top: -5px; margin-right: 5px;" /> English
+          {% else %}
+            <img src="{% static 'images/id.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin-top: -5px; margin-right: 5px;" /> Bahasa Indonesia
+          {% endif %}
+        </a>
+        <ul id='dropdown1' class='dropdown-content'>
+          <li style="line-height: 32px; min-height: 32px;">
+            <a href="#!" class="center-align lang-item" style="line-height: 32px; height: 32px; font-size: 12px;">
+            {% if LANGUAGE_CODE == "en" %}
+              <img src="{% static 'images/id.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin-top: -5px; margin-right: 5px;" /> Indonesian
+            {% else %}
+              <img src="{% static 'images/en.png' %}" style="width: 24px; height: 24px; vertical-align: middle; margin-top: -5px; margin-right: 5px;" /> Bahasa Inggris
+            {% endif %}
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="yellow darken-2">
+        <div class="userView header">
+          <h5 class="banner-color">{% block sidebar-title %}{% endblock %}</h5>
+        </div>
+      </li>
+      {% block sidebar-menu %}{% endblock %}
+    </ul>
+
+  </header>
+
+{% endblock %}
+
+{% block main-content %}
+  <main>
+    <div class="section content">
+      <h3 class="banner-color">{% block content-title %}{% endblock %}</h3>
+
+      {% block content-body %}{% endblock %}
+    </div>
+  </main>
+{% endblock %}

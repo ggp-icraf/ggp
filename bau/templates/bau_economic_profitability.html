@@ -1,0 +1,116 @@
+{% extends "bau_base_map.html" %}
+{% load staticfiles %}
+
+{% block custom-head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
+    <style type="text/css">
+        #map { height: 600px; width: 100%; }
+        .leaflet-container { background: #fff; }
+        .leaflet-control-container .slider { height: 10px; }
+        #leaflet-slider { background-color: #eee; display: none; }
+    </style>
+{% endblock %}
+
+{% block content-title %}
+{% if LANGUAGE_CODE == "en" %}
+  Economic - Profitability
+{% else %}
+  Ekonomi - Usaha Tani
+{% endif %}
+{% endblock %}
+
+{% block content-body %}
+    <!-- <p>Pellentesque pede. Donec pulvinar ullamcorper metus. In eu odio at lectus pulvinar mollis. Vestibulum sem magna, elementum ut, vestibulum eu, facilisis quis, arcu. Mauris a dolor. Nulla facilisi. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed blandit. Phasellus pellentesque, ante nec iaculis dapibus, eros justo auctor lectus, a lobortis lorem mauris quis nunc. Praesent pellentesque facilisis elit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. In hac habitasse platea dictumst. Nullam id ante eget dui vulputate aliquam. Pellentesque erat erat, tincidunt in, eleifend accumsan, malesuada eget, augue. Suspendisse sit amet tellus in eros bibendum condimentum. Vestibulum suscipit volutpat nulla. Maecenas pede nisl, elementum eu, ornare ac, malesuada at, erat. Proin gravida orci porttitor enim accumsan lacinia. Donec condimentum, urna non molestie semper, ligula enim ornare nibh, quis laoreet eros quam eget ante. Aliquam libero. Vivamus nisl nibh, iaculis vitae, viverra sit amet, ullamcorper vitae, turpis. Aliquam erat volutpat. Vestibulum dui sem, pulvinar sed, imperdiet nec, iaculis nec, leo. Fusce odio. Etiam arcu dui, faucibus eget, placerat vel, sodales eget, orci. Donec ornare neque ac sem. Mauris aliquet. Aliquam sem leo, vulputate sed, convallis at, ultricies quis, justo. Donec nonummy magna quis risus. Quisque eleifend. Phasellus tempor vehicula justo. Aliquam lacinia metus ut elit. Pellentesque pede. Donec pulvinar ullamcorper metus. In eu odio at lectus pulvinar mollis.</p> -->
+    <div class="row">
+        <div class="col s12 m3 right-align"><a id="btnPrev" class="waves-effect waves-light btn">&laquo;</a></div>
+        <div class="col s12 m6 center-align">
+            <ul class="collection" style="margin: 0;">
+                <li id="btnInfo" class="collection-item" style="padding: 7px 20px;">
+                    NPV 2018
+                </li>
+            </ul>
+        </div>
+        <div class="col s12 m3 left-align"><a id="btnNext" class="waves-effect waves-light btn">&raquo;</a></div>
+    </div>
+
+    <div class="row">
+      <div class="col s12 m12 l10 offset-l1" style="border: 1px solid #aaa; padding: 15px;">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m12 l10 offset-l1">
+            {% if LANGUAGE_CODE == "en" %}
+            <p align="center"><img class="responsive-img" src="{% static 'data/raster/bau_npv/NPV_legend_BAU.png' %}" />
+            {% else %}
+            <p align="center"><img class="responsive-img" src="{% static 'data/raster/bau_npv/NPV_legend_BAU.png' %}" />
+            {% endif %}
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% block custom-footer %}
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/jquery.ui.touch-punch.min.js' %}"></script>
+<script src="{% static 'js/leaflet.js' %}"></script>
+<script src="{% static 'js/leaflet.SliderControl.min.js' %}"></script>
+<script type="text/javascript">
+
+{% if LANGUAGE_CODE == "en" %}
+    var rasterData = [
+        {time: "2018", name: "NPV 2018", file: "NPV_2018_BAU.png"},
+        {time: "2022", name: "NPV 2022", file: "NPV_2022_BAU.png"},
+        {time: "2026", name: "NPV 2026", file: "NPV_2026_BAU.png"},
+        {time: "2030", name: "NPV 2030", file: "NPV_2030_BAU.png"}
+    ]
+{% else %}
+    var rasterData = [
+        {time: "2018", name: "NPV 2018", file: "NPV_2018_BAU.png"},
+        {time: "2022", name: "NPV 2022", file: "NPV_2022_BAU.png"},
+        {time: "2026", name: "NPV 2026", file: "NPV_2026_BAU.png"},
+        {time: "2030", name: "NPV 2030", file: "NPV_2030_BAU.png"}
+    ]
+{% endif %}
+
+    var map = new L.Map('map',{zoomControl:true});
+    var sliderControl = L.control.sliderControl();
+
+    $.getJSON("{% static 'data/geojson/batas_admin.geojson' %}", function(data){
+        mapData = L.geoJson(data);
+        mapBound = mapData.getBounds();
+        //mapData.addTo(map);
+
+        var lgroup = L.layerGroup();
+
+        rasterData.map( function(val,i) {
+            //console.log(val.name)
+            var layerPath = "{% static 'data/raster/bau_npv/' %}" + val.file  ;
+            var imglayer = L.imageOverlay(layerPath, mapBound, { time: val.time });
+            lgroup.addLayer(imglayer);
+        });
+
+        sliderControl = L.control.sliderControl({ position: "topright", layer:lgroup, follow: true });
+        map.addControl(sliderControl);
+        sliderControl.startSlider();
+
+        map.fitBounds(mapBound);
+        //console.log($( "#leaflet-slider" ).slider( "slide" ));
+    });
+
+    $("#btnPrev").on( "click", function() { SlideMap($( "#leaflet-slider" ).slider("value") - 1); });
+    $("#btnNext").on( "click", function() { SlideMap($( "#leaflet-slider" ).slider("value") + 1); });
+
+    function SlideMap(value) {
+        var slider = $( "#leaflet-slider" );
+        slider.slider("value", value);
+        slider.slider("option", "slide")(null, { value: value })
+
+        $("#btnInfo").html(rasterData[slider.slider("value")].name)
+    }
+
+</script>
+{% endblock %}

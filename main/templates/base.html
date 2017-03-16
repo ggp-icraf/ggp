@@ -1,0 +1,68 @@
+{% load staticfiles %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Green Growth Plan of South Sumatra</title>
+
+  <!-- CSS  -->
+  <!--link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"-->
+  <link href="{% static 'css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{% static 'css/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <style type="text/css">
+    html {
+      font-family: GillSans, Calibri, Trebuchet, sans-serif;
+    }
+
+/*    @font-face {
+    font-family: 'Roboto Regular';
+
+    src: url('{% static 'fonts/roboto/roboto-regular-webfont.eot' %}');
+    src: url('{% static 'fonts/roboto/roboto-regular-webfont.eot?#iefix' %}') format('embedded-opentype'), 
+       url('{% static 'fonts/roboto/roboto-regular-webfont.woff2' %}') format('woff2'), 
+       url('{% static 'fonts/roboto/roboto-regular-webfont.woff' %}') format('woff'), 
+       url('{% static 'fonts/roboto/roboto-regular-webfont.ttf' %}') format('truetype'), 
+       url('{% static 'fonts/roboto/roboto-regular-webfont.svg#robotoregular' %}') format('svg');
+*/  }  
+  </style>
+
+  {% block custom-head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Homepage Banner -->
+  {% block home-banner %}{% endblock %}
+
+  <!-- Content Left menu -->
+  {% block sidebar %}{% endblock %}
+
+  <!-- Main content -->
+  {% block main-content %}{% endblock %}
+
+  <!-- Main Scripts -->
+  <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+  <script src="{% static 'js/materialize.js' %}"></script>
+  <script src="{% static 'js/init.js' %}"></script>
+  <script type="text/javascript">
+    $(".lang-selector").on( "click", function(e) { e.preventDefault(); });
+
+    $(".lang-item").on("click", function(e) {
+      var cur_lang = "{{ LANGUAGE_CODE }}";
+      var new_lang = (cur_lang == "en") ? "id" : "en";
+      var url = "/" + new_lang + "{{ request.get_full_path|slice:'3:' }}";
+
+      location.href = url;
+      
+      e.preventDefault();
+    });
+  </script>
+
+  <!-- Custom Scripts -->
+  {% block custom-footer %}{% endblock %}
+
+  </body>
+</html>

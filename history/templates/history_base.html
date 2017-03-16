@@ -1,0 +1,135 @@
+{% extends "content.html" %}
+
+{% block custom-head %}
+    {{ block.super }}
+    <style type="text/css">
+      .dropdown-content { z-index: 9999; }
+    </style>
+{% endblock %}
+
+{% block sidebar-title %}{% if LANGUAGE_CODE == "en" %}Historical Condition{% else %}Kondisi historis{% endif %}{% endblock %}
+
+{% block sidebar-menu %}
+{% if LANGUAGE_CODE == "en" %}
+      <li><a class="waves-effect" href="/{{ LANGUAGE_CODE }}/history/lulc">Land use/land cover change</a></li>
+      <li><div class="divider"></div></li>
+      <!-- <li><a class="waves-effect" href="/{{ LANGUAGE_CODE }}/history/driver">Driver of land use/land cover change</a></li>
+      <li><div class="divider"></div></li> -->
+      <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+              <li>
+                  <a class="collapsible-header active">Environmental services</a>
+                  <div class="collapsible-body">
+                    <ul>
+                        <li><a>Carbon</a></li>
+                        <div class="submenu">
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/carbon-emission">Emission</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/carbon-sequestration">Sequestration</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/carbon-peat">Peat</a></li>
+                        </div>
+                        <li><a>Biodiversity</a></li>
+                        <div class="submenu">
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/biodiversity-teci">TECI</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/biodiversity-difa">DIFA</a></li>
+                        </div>
+                        <li><a>Hydrology</a></li>
+                        <div class="submenu">
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/hydrology-sedimentasi">Sedimentation</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/hydrology-runoff">Run-off</a></li>
+                        </div>
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+      </li>
+      <li><div class="divider"></div></li>
+      <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+              <li>
+                  <a class="collapsible-header active">Economic</a>
+                  <div class="collapsible-body">
+                    <ul>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/economic-regional">Regional</a></li>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/economic-profitability">Profitability</a></li>
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+      </li>
+      <!-- <li><div class="divider"></div></li>
+      <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+              <li>
+                  <a class="collapsible-header active">Comodity</a>
+                  <div class="collapsible-body">
+                    <ul>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/market">Market / Value chain</a></li>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/issue">Issue</a></li>
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+      </li> -->
+{% else %}
+      <li><a class="waves-effect" href="/{{ LANGUAGE_CODE }}/history/lulc">Perubahan tutupan / tataguna lahan</a></li>
+      <li><div class="divider"></div></li>
+      <!-- <li><a class="waves-effect" href="/{{ LANGUAGE_CODE }}/history/driver">Faktor pemicu perubahan tataguna lahan</a></li>
+      <li><div class="divider"></div></li> -->
+      <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+              <li>
+                  <a class="collapsible-header active">Jasa lingkungan</a>
+                  <div class="collapsible-body">
+                    <ul>
+                        <li><a>Karbon</a></li>
+                        <div class="submenu">
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/carbon-emission">Emisi</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/carbon-sequestration">Sekuestrasi</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/carbon-peat">Gambut</a></li>
+                        </div>
+                        <li><a>Keanekaragaman Hayati</a></li>
+                        <div class="submenu">
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/biodiversity-teci">TECI</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/biodiversity-difa">DIFA</a></li>
+                        </div>
+                        <li><a>Hidrologi</a></li>
+                        <div class="submenu">
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/hydrology-sedimentasi">Sedimentasi</a></li>
+                          <li><a href="/{{ LANGUAGE_CODE }}/history/hydrology-runoff">Limpasan permukaan</a></li>
+                        </div>
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+      </li>
+      <li><div class="divider"></div></li>
+      <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+              <li>
+                  <a class="collapsible-header active">Indikator ekonomi</a>
+                  <div class="collapsible-body">
+                    <ul>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/economic-regional">Regional</a></li>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/economic-profitability">Usaha tani</a></li>
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+      </li>
+      <!-- <li><div class="divider"></div></li>
+      <li class="no-padding">
+          <ul class="collapsible collapsible-accordion">
+              <li>
+                  <a class="collapsible-header active">Komoditas</a>
+                  <div class="collapsible-body">
+                    <ul>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/market">Market / Value chain</a></li>
+                        <li><a href="/{{ LANGUAGE_CODE }}/history/issue">Isu</a></li>
+                    </ul>
+                  </div>
+              </li>
+          </ul>
+      </li> -->
+{% endif %}
+      <li><div class="divider"></div></li>
+{% endblock %}
